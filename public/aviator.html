@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="pt-BR">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aviãozinho — Arena Demo</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<main class="wrap game">
+  <section class="game-main">
+    <div class="game-titlebar"><div><span class="eyebrow">✈ AO VIVO • RODADAS EM TEMPO REAL</span><h1>Aviãozinho</h1><p>Retire suas fichas antes do multiplicador cair.</p></div><span class="badge live">ONLINE</span></div>
+    <div class="history" id="history" aria-label="Últimas quedas"></div>
+    <div class="stage"><canvas id="cv" width="900" height="390"></canvas><div class="mult" id="mult" aria-live="off">1.00x</div></div>
+    <div class="panel" style="margin-top:14px">
+      <div class="row">
+        <div><label for="amount">Aposta</label><input id="amount" type="number" min="1" max="500" step="1" value="5"></div>
+        <div><label for="autoc">Retirada automática (x)</label><input id="autoc" type="number" min="1.01" step="0.01" placeholder="opcional"></div>
+        <button class="primary" id="act">Apostar</button>
+      </div>
+      <p class="toast muted" id="msg" role="status"></p>
+    </div>
+    <details class="panel" style="margin-top:14px"><summary>Conferir rodada anterior</summary><p class="muted">Selecione uma queda no histórico para refazer o cálculo com o seed revelado.</p><p class="mono" id="verify"></p></details>
+  </section>
+  <aside class="game-side">
+    <div class="panel"><div class="side-title"><h3>Apostas da rodada</h3><span class="side-label">tempo real</span></div><div class="bets" id="bets"></div></div>
+    <div class="panel"><div class="side-title"><h3>Como funciona</h3></div><p class="muted">Faça sua aposta durante a janela aberta. Quando o voo começa, o multiplicador sobe até a queda. Você pode retirar manualmente ou definir um cashout automático.</p></div>
+  </aside>
+</main>
+<script type="module" src="aviator.js"></script>
+</body></html>
