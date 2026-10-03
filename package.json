@@ -1,0 +1,12 @@
+{
+  "name": "tigrinho-demo",
+  "version": "1.0.0",
+  "description": "Projeto demonstrativo de jogos com fichas virtuais",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
