@@ -1,7 +1,8 @@
 {
-  "name": "tigrinho-demo",
+  "name": "felino-demo",
   "version": "1.0.0",
-  "description": "Projeto demonstrativo de jogos com fichas virtuais",
+  "private": true,
+  "description": "Demo de jogos com fichas virtuais, painel administrativo e ranking mensal.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

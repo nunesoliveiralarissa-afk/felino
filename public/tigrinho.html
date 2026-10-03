@@ -1,38 +1,47 @@
 <!doctype html>
 <html lang="pt-BR">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tigrinho — Arena Demo</title><link rel="stylesheet" href="style.css"></head>
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Tigrinho — Tigrinho da Sorte</title>
+  <link rel="stylesheet" href="style.css">
+</head>
 <body>
-<main class="wrap game">
-  <section class="game-main">
-    <div class="game-titlebar"><div><span class="eyebrow">🐯 JOGO DA ARENA</span><h1>Tigrinho</h1><p>Combine símbolos e descubra seus pagamentos.</p></div><span class="badge">FICHAS VIRTUAIS</span></div>
-    <div class="machine" id="machine" aria-label="Máquina do Tigrinho"></div>
-    <p class="result" id="result" aria-live="polite">Faça sua aposta</p>
-    <div class="panel">
-      <div class="row">
-        <div><label>Aposta por giro</label><div class="bet-stepper"><button id="betDown" aria-label="Diminuir aposta">−</button><output id="betOut">5,00</output><button id="betUp" aria-label="Aumentar aposta">+</button></div></div>
-        <div><label>&nbsp;</label><button class="primary btn-wide" id="spin">Girar <span>→</span></button></div>
-        <div><label>&nbsp;</label><button id="auto" aria-pressed="false">Auto: desligado</button></div>
+  <main class="wrap game">
+    <section>
+      <div class="machine" id="machine" aria-label="Máquina do Tigrinho"></div>
+      <p class="result" id="result" aria-live="polite">Faça sua aposta</p>
+      <div class="panel">
+        <label>Aposta por giro</label>
+        <div class="bet-stepper">
+          <button id="betDown" aria-label="Diminuir aposta">−</button>
+          <output id="betOut">5,00</output>
+          <button id="betUp" aria-label="Aumentar aposta">+</button>
+        </div>
+        <div class="row" style="margin-top:14px">
+          <button class="primary" id="spin">Girar</button>
+          <button id="auto" aria-pressed="false">Auto: desligado</button>
+        </div>
+        <p class="toast muted" id="msg" role="status"></p>
       </div>
-      <p class="toast muted" id="msg" role="status"></p>
-    </div>
-  </section>
-  <aside class="game-side">
-    <div class="panel">
-      <div class="side-title"><h3>Pagamentos</h3><span class="side-label">tabela</span></div>
-      <table class="paytable" id="paytable"></table>
-      <p class="muted">Três iguais em uma das 5 linhas. O 🐯 substitui qualquer símbolo.</p>
-    </div>
-    <div class="panel">
-      <div class="side-title"><h3>Provably fair</h3><span class="side-label">auditoria</span></div>
-      <p class="muted">O hash é publicado antes dos giros. Depois, o seed pode ser revelado para conferir o resultado.</p>
-      <p class="mono" id="hash">—</p>
-      <label for="cseed">Seed do cliente</label><input id="cseed" maxlength="64" placeholder="aleatório">
-      <p class="muted">Giros neste seed: <b id="nonce">0</b></p>
-      <button id="rotate" class="gold btn-wide">Revelar e trocar seed</button>
-      <p class="mono" id="revealed"></p>
-    </div>
-  </aside>
-</main>
-<script type="module" src="tiger.js"></script>
-</body></html>
+    </section>
+    <aside style="display:grid;gap:20px;align-content:start">
+      <div class="panel">
+        <h3>Pagamentos</h3>
+        <table class="paytable" id="paytable"></table>
+        <p class="muted">Três iguais em uma das 5 linhas. O 🐯 substitui qualquer símbolo. O valor é multiplicado pela fração da aposta daquela linha.</p>
+      </div>
+      <div class="panel">
+        <h3>Prova de justiça</h3>
+        <p class="muted">Hash do seed do servidor (fixado antes dos giros):</p>
+        <p class="mono" id="hash">—</p>
+        <label for="cseed">Seed do cliente</label>
+        <input id="cseed" maxlength="64" placeholder="aleatório">
+        <p class="muted">Giros neste seed: <b id="nonce">0</b></p>
+        <button id="rotate">Revelar seed e trocar</button>
+        <p class="mono" id="revealed"></p>
+      </div>
+    </aside>
+  </main>
+  <script type="module" src="tiger.js"></script>
+</body>
+</html>

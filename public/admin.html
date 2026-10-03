@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Painel admin — Felino Demo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap page-space admin-page">
+    <section class="panel page-head admin-hero">
+      <div>
+        <span class="eyebrow">ADMINISTRADOR</span>
+        <h1>Painel do patetola</h1>
+        <p class="muted">Controle de fichas virtuais e acompanhamento do ranking mensal.</p>
+      </div>
+      <a class="btn" href="index.html">Voltar para o início</a>
+    </section>
+
+    <section class="admin-grid">
+      <div class="panel">
+        <div class="section-title"><div><span class="eyebrow">CARTEIRA</span><h2>Adicionar ou remover saldo</h2></div></div>
+        <form id="walletForm" class="admin-form">
+          <div><label for="user">Usuário</label><select id="user" required></select></div>
+          <div><label for="amount">Valor em fichas</label><input id="amount" type="number" step="1" min="-100000000" max="100000000" placeholder="Ex.: 5000 ou -500" required><small class="muted">Use valor positivo para adicionar e negativo para remover.</small></div>
+          <button class="gold" type="submit">Aplicar alteração</button>
+        </form>
+        <p id="walletMsg" class="toast" role="status"></p>
+      </div>
+
+      <div class="panel">
+        <span class="eyebrow">VISÃO GERAL</span>
+        <h2>Usuários</h2>
+        <div id="users" class="admin-users"><div class="empty">Carregando…</div></div>
+      </div>
+    </section>
+
+    <section class="panel">
+      <div class="section-title"><div><span class="eyebrow">MÊS ATUAL</span><h2>Ranking</h2></div><a class="btn" href="ranking.html">Abrir ranking completo</a></div>
+      <div class="ranking-head"><span>#</span><span>Jogador</span><span>Rodadas</span><span>Apostado</span><span>Ganhos</span><span>Resultado</span></div>
+      <div id="ranking" class="ranking-list"></div>
+    </section>
+  </main>
+  <script type="module">
+    import { api, init, fmt } from './app.js';
+    await init();
+    const users = document.getElementById('users');
+    const select = document.getElementById('user');
+    const ranking = document.getElementById('ranking');
+    const msg = document.getElementById('walletMsg');
+    const form = document.getElementById('walletForm');
+
+    function renderUsers(list) {
+      select.replaceChildren(...list.map(u => { const o=document.createElement('option'); o.value=u.username; o.textContent=`${u.username} — ${fmt(u.balance)}`; return o; }));
+      users.replaceChildren(...list.map(u => {
+        const row=document.createElement('div'); row.className='admin-user';
+        const name=document.createElement('b'); name.textContent=u.username;
+        const bal=document.createElement('span'); bal.textContent=fmt(u.balance)+' fichas';
+        row.append(name, bal); return row;
+      }));
+    }
+    function renderRanking(entries) {
+      if (!entries.length) { ranking.innerHTML='<div class="empty">Ainda não há resultados neste mês.</div>'; return; }
+      ranking.replaceChildren(...entries.map((r,i)=>{
+        const row=document.createElement('div'); row.className='ranking-row';
+        const a=document.createElement('strong'); a.textContent=i+1;
+        const b=document.createElement('span'); b.textContent=r.username;
+        const c=document.createElement('span'); c.textContent=r.rounds;
+        const d=document.createElement('span'); d.textContent=fmt(r.wagered);
+        const e=document.createElement('span'); e.textContent=fmt(r.won);
+        const f=document.createElement('strong'); f.className=r.net>=0?'good':'lose'; f.textContent=(r.net>=0?'+':'')+fmt(r.net);
+        row.append(a,b,c,d,e,f); return row;
+      }));
+    }
+    async function load() {
+      try {
+        const data=await api('admin/overview');
+        renderUsers(data.users); renderRanking(data.ranking.entries);
+      } catch(e) {
+        document.body.innerHTML='<main class="wrap page-space"><section class="panel"><h1>Acesso negado</h1><p class="muted">Entre com o usuário administrador para abrir este painel.</p><a class="btn primary" href="index.html">Voltar</a></section></main>';
+      }
+    }
+    form.addEventListener('submit', async (ev) => {
+      ev.preventDefault(); msg.textContent=''; msg.className='toast';
+      try {
+        const data=await api('admin/wallet','POST',{username:select.value,amount:Number(document.getElementById('amount').value)});
+        msg.className='toast good'; msg.textContent=`Saldo de ${data.username}: ${fmt(data.balance)} fichas.`;
+        document.getElementById('amount').value=''; await load();
+      } catch(e) { msg.className='toast lose'; msg.textContent=e.message; }
+    });
+    load();
+  </script>
+</body>
+</html>

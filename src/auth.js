@@ -33,7 +33,7 @@ function register(username, password) {
     createdAt: Date.now(),
     lastRefill: 0,
     seeds: fair.newSeedPair(),
-    stats: { wagered: 0, won: 0, rounds: 0 },
+    stats: { wagered: 0, won: 0, rounds: 0, monthly: {} },
     ledger: [],
   });
 }

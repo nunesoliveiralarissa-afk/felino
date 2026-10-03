@@ -46,3 +46,9 @@ public/              páginas e scripts (o front só desenha)
 
 ## Antes de pensar em produção
 Este projeto é uma demo. Apostas com dinheiro real no Brasil exigem autorização da SPA/Ministério da Fazenda (Lei 14.790/2023), KYC, jogo responsável, e infraestrutura de pagamentos e auditoria que não estão aqui. Para escalar, troque o JSON por PostgreSQL com transações e rode atrás de HTTPS.
+
+## Painel administrativo e ranking
+- `admin.html`: painel exclusivo do usuário configurado em `ADMIN_USERNAME` (por padrão `patetola`) para adicionar/remover fichas virtuais.
+- `ranking.html`: ranking mensal por resultado líquido (`ganhos - apostas`) e número de rodadas.
+- O histórico mensal guarda até 12 meses de dados por usuário.
+- Para mudar o administrador no Render, use a variável de ambiente `ADMIN_USERNAME`.

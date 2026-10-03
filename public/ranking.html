@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Ranking mensal — Felino Demo</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="wrap page-space">
+    <section class="panel page-head">
+      <div>
+        <span class="eyebrow">PLACAR DA COMUNIDADE</span>
+        <h1>Ranking mensal</h1>
+        <p class="muted">Classificação por resultado líquido no mês. Fichas virtuais, sem valor monetário.</p>
+      </div>
+      <div class="month-box"><label for="month">Mês</label><input id="month" type="month"></div>
+    </section>
+    <section class="panel ranking-panel">
+      <div class="ranking-head"><span>#</span><span>Jogador</span><span>Rodadas</span><span>Apostado</span><span>Ganhos</span><span>Resultado</span></div>
+      <div id="ranking" class="ranking-list"><div class="empty">Carregando ranking…</div></div>
+      <p id="rankingMsg" class="toast lose"></p>
+    </section>
+  </main>
+  <script type="module">
+    import { api, init, fmt } from './app.js';
+    await init();
+    const month = document.getElementById('month');
+    const ranking = document.getElementById('ranking');
+    const msg = document.getElementById('rankingMsg');
+    const now = new Date();
+    month.value = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+    async function load() {
+      msg.textContent = '';
+      ranking.innerHTML = '<div class="empty">Atualizando…</div>';
+      try {
+        const data = await api(`ranking?month=${encodeURIComponent(month.value)}`);
+        if (!data.entries.length) {
+          ranking.innerHTML = '<div class="empty">Ainda não há resultados neste mês.</div>';
+          return;
+        }
+        ranking.replaceChildren(...data.entries.map((r, i) => {
+          const row = document.createElement('div');
+          row.className = 'ranking-row' + (i < 3 ? ` top-${i+1}` : '');
+          const rank = document.createElement('strong'); rank.textContent = String(i + 1);
+          const name = document.createElement('div');
+          name.innerHTML = `<b></b><small></small>`;
+          name.querySelector('b').textContent = r.username;
+          name.querySelector('small').textContent = r.net >= 0 ? 'resultado positivo' : 'resultado negativo';
+          const rounds = document.createElement('span'); rounds.textContent = r.rounds;
+          const wagered = document.createElement('span'); wagered.textContent = fmt(r.wagered);
+          const won = document.createElement('span'); won.textContent = fmt(r.won);
+          const net = document.createElement('strong'); net.className = r.net >= 0 ? 'good' : 'lose'; net.textContent = `${r.net >= 0 ? '+' : ''}${fmt(r.net)}`;
+          row.append(rank, name, rounds, wagered, won, net);
+          return row;
+        }));
+      } catch (e) { ranking.innerHTML = ''; msg.textContent = e.message; }
+    }
+    month.addEventListener('change', load);
+    load();
+  </script>
+</body>
+</html>

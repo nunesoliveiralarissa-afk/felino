@@ -9,8 +9,10 @@ const tiger = require('./src/games/tiger');
 const aviator = require('./src/games/aviator');
 const { ApiError } = require('./src/errors');
 const H = require('./src/http');
+const ranking = require('./src/ranking');
 
 db.load();
+for (const u of db.allUsers()) wallet.migrateUser(u);
 aviator.start();
 setInterval(auth.cleanupSessions, 60 * 60 * 1000).unref();
 
@@ -60,6 +62,8 @@ const routes = {
 
   'GET /api/me': ({ user }) => ({ user: user ? publicUser(user) : null }),
 
+  'GET /api/ranking': ({ query }) => ranking.leaderboard(query.month || ranking.monthKey()),
+
   'GET /api/wallet/history': ({ user }) => {
     need(user);
     return { ledger: user.ledger.slice(-50).reverse() };
@@ -73,6 +77,27 @@ const routes = {
     user.lastRefill = Date.now();
     wallet.credit(user, config.REFILL_AMOUNT, 'refill');
     return { balance: user.balance };
+  },
+
+  'GET /api/admin/overview': ({ user }) => {
+    needAdmin(user);
+    return {
+      admin: user.username,
+      users: db.allUsers().map((u) => ({ username: u.username, balance: u.balance, createdAt: u.createdAt, stats: u.stats })),
+      ranking: ranking.leaderboard(ranking.monthKey()),
+    };
+  },
+
+  'POST /api/admin/wallet': ({ user, body }) => {
+    needAdmin(user);
+    if (typeof body.username !== 'string') throw new ApiError(400, 'Usuário inválido', 'bad_username');
+    const target = db.findByUsername(body.username);
+    if (!target) throw new ApiError(404, 'Usuário não encontrado', 'user_not_found');
+    const amount = Number(body.amount);
+    if (!Number.isSafeInteger(amount) || amount === 0) throw new ApiError(400, 'Informe um valor inteiro diferente de zero', 'bad_amount');
+    if (amount < 0 && target.id === user.id) throw new ApiError(400, 'O administrador não pode remover o próprio saldo por este painel', 'self_debit');
+    const balance = wallet.adjustAdmin(target, amount, `admin:${user.username}`);
+    return { username: target.username, balance };
   },
 
   // ----- Tigrinho -----
@@ -119,9 +144,18 @@ function need(user) {
   if (!user) throw new ApiError(401, 'Faça login para jogar', 'unauthorized');
 }
 
+function needAdmin(user) {
+  need(user);
+  if (String(user.username).toLowerCase() !== String(config.ADMIN_USERNAME).toLowerCase()) {
+    throw new ApiError(403, 'Acesso restrito ao administrador', 'forbidden');
+  }
+}
+
 // ---------- servidor ----------
 const server = http.createServer(async (req, res) => {
-  const { pathname } = new URL(req.url, 'http://x');
+  const requestUrl = new URL(req.url, 'http://x');
+  const { pathname, searchParams } = requestUrl;
+  const query = Object.fromEntries(searchParams.entries());
   const ip = req.socket.remoteAddress;
 
   try {
@@ -141,7 +175,7 @@ const server = http.createServer(async (req, res) => {
       throw new ApiError(415, 'Use application/json');
     }
     const body = req.method === 'POST' ? await H.readJson(req) : {};
-    H.sendJson(res, 200, await handler({ req, res, body, user, ip }));
+    H.sendJson(res, 200, await handler({ req, res, body, user, ip, query }));
   } catch (e) {
     if (!(e instanceof ApiError)) console.error(e);
     const err = e instanceof ApiError ? e : new ApiError(500, 'Erro interno');

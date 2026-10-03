@@ -2,66 +2,28 @@
 <html lang="pt-BR">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#080a0f">
-  <title>Tigrinho da Sorte — Arena Demo</title>
+  <title>Tigrinho da Sorte — demo com fichas virtuais</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="wrap home">
-    <section class="hero hero-home">
-      <div class="hero-copy">
-        <span class="eyebrow">✦ ARENA DE JOGOS • DEMONSTRAÇÃO</span>
-        <h1>Entre na arena.<br><span>Jogue com estilo.</span></h1>
-        <p>Uma interface moderna para explorar dois jogos com fichas virtuais. Resultados, saldo e pagamentos continuam sendo controlados pelo servidor.</p>
-        <div class="hero-actions">
-          <a class="btn primary btn-lg" href="tigrinho.html">Jogar Tigrinho <span>→</span></a>
-          <a class="btn ghost btn-lg" href="aviator.html">Ver Aviãozinho</a>
-        </div>
-        <div class="hero-stats">
-          <div><b>2</b><span>jogos</span></div>
-          <div><b>1000</b><span>fichas iniciais</span></div>
-          <div><b>100%</b><span>virtual</span></div>
-        </div>
-      </div>
-      <div class="hero-art" aria-hidden="true">
-        <div class="orb orb-a"></div><div class="orb orb-b"></div>
-        <div class="tiger-emblem">🐯</div>
-        <div class="floating-card fc-one"><span>✦</span><b>96,34%</b><small>RTP Tigrinho</small></div>
-        <div class="floating-card fc-two"><span>↗</span><b>1.00x</b><small>Multiplicador</small></div>
-      </div>
+  <main class="wrap">
+    <section class="hero">
+      <h1>O tigre decide.<br>O servidor prova.</h1>
+      <p>Dois jogos clássicos com toda a lógica no backend: o resultado de cada giro e de cada voo é definido e registrado no servidor, e você consegue conferir depois.</p>
     </section>
-
-    <section class="section-head">
-      <div><span class="eyebrow">ESCOLHA SEU JOGO</span><h2>Experiências da arena</h2></div>
-      <span class="live-dot"><i></i> servidor online</span>
+    <section class="cards">
+      <a class="panel game-card" href="tigrinho.html"><span class="big">🐯</span><h2>Tigrinho</h2><p class="muted">3 rolos, 5 linhas e o tigre como coringa. RTP exato de 96,34%.</p></a>
+      <a class="panel game-card" href="aviator.html"><span class="big">✈️</span><h2>Aviãozinho</h2><p class="muted">Multiplicador em tempo real. Retire antes de o avião cair.</p></a>
     </section>
-
-    <section class="game-grid">
-      <a class="game-card tiger-card" href="tigrinho.html">
-        <div class="card-glow"></div>
-        <div class="game-icon">🐯</div>
-        <div class="card-top"><span class="badge">POPULAR</span><span class="arrow">↗</span></div>
-        <div class="game-info"><h3>Tigrinho</h3><p>Gire os três rolos, encontre combinações e descubra os pagamentos.</p></div>
-        <div class="card-meta"><span>3 × 3</span><span>5 linhas</span><span>coringa 🐯</span></div>
-        <div class="play-line"><b>Jogar agora</b><span>→</span></div>
-      </a>
-      <a class="game-card aviator-card" href="aviator.html">
-        <div class="card-glow"></div>
-        <div class="game-icon">✈️</div>
-        <div class="card-top"><span class="badge live">AO VIVO</span><span class="arrow">↗</span></div>
-        <div class="game-info"><h3>Aviãozinho</h3><p>Acompanhe o multiplicador subir e retire suas fichas antes da queda.</p></div>
-        <div class="card-meta"><span>tempo real</span><span>cashout</span><span>provably fair</span></div>
-        <div class="play-line"><b>Entrar na rodada</b><span>→</span></div>
-      </a>
+    <section class="panel" style="margin-top:20px;display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap">
+      <div><span class="eyebrow">NOVO</span><h2>Ranking mensal</h2><p class="muted">Veja quem acumulou o maior resultado líquido no mês usando fichas virtuais.</p></div>
+      <a class="btn gold" href="ranking.html">Ver ranking</a>
     </section>
-
-    <section class="trust-grid">
-      <article class="info-card"><div class="info-icon">⌁</div><div><span class="eyebrow">BACKEND FIRST</span><h3>Resultado no servidor</h3><p>O navegador apresenta a experiência. Sorteios, saldo e pagamentos são calculados no backend.</p></div></article>
-      <article class="info-card"><div class="info-icon">✓</div><div><span class="eyebrow">TRANSPARÊNCIA</span><h3>Provably fair</h3><p>O hash do seed é publicado antes da rodada e o seed pode ser revelado para conferência.</p></div></article>
-      <article class="info-card"><div class="info-icon">◎</div><div><span class="eyebrow">AMBIENTE DE TESTE</span><h3>Somente fichas virtuais</h3><p>Não há depósito, saque, pagamento ou valor monetário neste projeto de demonstração.</p></div></article>
+    <section class="facts">
+      <div class="panel"><h3>Resultado no servidor</h3><p class="muted">O navegador só desenha. Saldo, sorteio e pagamento nunca passam pelo cliente.</p></div>
+      <div class="panel"><h3>Provably fair</h3><p class="muted">Você recebe o hash do seed antes de jogar e o seed original depois, para refazer cada resultado.</p></div>
+      <div class="panel"><h3>Fichas virtuais</h3><p class="muted">Você começa com 1.000 fichas e recebe recarga grátis se zerar. Nada vale dinheiro.</p></div>
     </section>
-
-    <footer class="home-footer"><span>Tigrinho da Sorte <em>•</em> Arena Demo</span><span>Projeto local para testes de interface e backend</span></footer>
   </main>
   <script type="module" src="home.js"></script>
 </body>

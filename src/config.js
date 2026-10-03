@@ -5,6 +5,7 @@ module.exports = {
   PORT: Number(process.env.PORT) || 3000,
   DATA_FILE: process.env.DATA_FILE || path.join(__dirname, '..', 'data', 'db.json'),
   PUBLIC_DIR: path.join(__dirname, '..', 'public'),
+  ADMIN_USERNAME: process.env.ADMIN_USERNAME || 'patetola',
 
   // Valores em "centavos de ficha" (inteiros, nunca float).
   START_BALANCE: 100_000, // 1.000,00 fichas
